@@ -1,0 +1,54 @@
+## Problem 5
+# setup and initialize variables
+require("graphics")
+theta<-seq(0,1,length=11)
+yi_sum <- 57
+N <- 100
+
+# ii) loop every value of theta and plot probabilities as a function of theta
+prob<-theta^57 * (1-theta)^(N-57)
+plot(theta, prob, type='l')
+title('Bernoulli Distribution of Yi Sum')
+
+# iii) Posterior Distribution 
+prob <- 1/10 * theta^57 * (1-theta)^(N-57)
+plot(theta, prob, type='l')
+title('Posterior Distribution In Discrete Theta')
+
+# iv) Plot Posterior density
+theta <- 1:1000/1000
+prob<-theta^57 * (1-theta)^(N-57)
+plot(theta, prob, type='l')
+title('Posterior Distribution in Continuous Theta')
+
+# v) Posterior Distribution as function of theta
+prob <- dbeta(theta, 1+57, 1+100-57)
+plot(theta, prob)
+title('Beta Distribution of Posterior')
+
+
+## Problem 6:
+theta_0 <- seq(0.1, 0.9, 0.1)
+ptheta <- 0.5
+n_0 <-c(1, 2, 8, 16, 32)
+probs <- matrix(0, length(theta_0), length(n_0))
+
+theta_index <- 0
+for (theta in theta_0) {
+  
+  n_index <- 0
+  for (n in n_0) {
+    a <- theta*n
+    b <- (1-theta)*n
+    
+    # Compute Pr(theta > 0.5 | Sum(Yi) = 57) and plot contours
+    probs[theta_index, n_index] <- 1-pbeta(ptheta, a+yi_sum, b+N-yi_sum)
+
+    n_index <- n_index + 1
+  }
+  theta_index <- theta_index+1
+}
+contour(theta_0, n_0, probs)
+title(main="Contour Plot of Different [a,b] Beta Priors", xlab = "theta_0", ylab = "n_0")
+
+
